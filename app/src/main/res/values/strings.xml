@@ -1,0 +1,54 @@
+<resources>
+
+    -- TERMS
+    <string name="app_name">Term Tracker</string>
+
+    <string name="term_title">Term Title</string>
+
+    <string name="start_date">Start Date</string>
+
+    <string name="end_date">End Date</string>
+
+    <string name="edit_term">Edit Term</string>
+
+
+    -- COURSES
+    <string name="course_title">Course Title</string>
+
+    <string name="course_start">Course Start Date</string>
+
+    <string name="course_end">Course End Date</string>
+
+    <string name="course_status">Course Status</string>
+
+    <string name="inst_name">Instructor Name</string>
+
+    <string name="inst_email">Instructor Email</string>
+
+    <string name="inst_phone">Instructor Phone</string>
+
+    -- ASSESSMENTS
+
+    <string name="assessment_title">Assessment Title</string>
+
+    <string name="assessment_type">Assessment Type</string>
+
+    <string name="due_date">Due Date</string>
+
+
+    -- COURSE STATUS OPTIONS
+    <string-array name="status_options">
+        <item>Plan to Take</item>
+        <item>In Progress</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+    </string-array>
+
+    -- ASSESSMENT TYPE OPTIONS
+    <string-array name="assessment_types">
+        <item>Objective Assessment</item>
+        <item>Performance Assessment</item>
+    </string-array>
+
+
+</resources>
