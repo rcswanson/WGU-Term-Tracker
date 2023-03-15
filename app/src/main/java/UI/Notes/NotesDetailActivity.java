@@ -21,6 +21,8 @@ import Database.AssessmentDAO;
 import Database.NoteDAO;
 import Entities.NotesTable;
 import UI.Assessments.AssessmentDetailActivity;
+import UI.Courses.CourseDetailActivity;
+import UI.Courses.EditCourseActivity;
 
 public class NotesDetailActivity extends AppCompatActivity {
 
@@ -37,6 +39,7 @@ public class NotesDetailActivity extends AppCompatActivity {
         noteDetailTitleTextView = findViewById(R.id.noteDetailTitleTextView);
         noteDetailTextView = findViewById(R.id.noteDetailTextView);
 
+        int courseId = getIntent().getIntExtra("courseId", -1);
         int noteId = getIntent().getIntExtra("noteId", -1);
         if (noteId != -1) {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
@@ -73,6 +76,17 @@ public class NotesDetailActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton editNote = findViewById(R.id.editNoteButton);
+        editNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotesDetailActivity.this, EditNoteActivity.class);
+                intent.putExtra("noteId", noteId);
+                intent.putExtra("courseId", courseId);
+                startActivity(intent);
+            }
+        });
+
         shareNote = findViewById(R.id.shareNoteButton);
         shareNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,11 +94,6 @@ public class NotesDetailActivity extends AppCompatActivity {
                 showShareOptions();
             }
         });
-    }
-
-    private void updateUI() {
-        noteDetailTitleTextView.setText(note.getNoteTitle());
-        noteDetailTextView.setText(note.getNote());
     }
 
     private void showShareOptions() {
@@ -124,7 +133,7 @@ public class NotesDetailActivity extends AppCompatActivity {
     private void shareEmail() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Note from Term Tracker");
+        intent.putExtra(Intent.EXTRA_SUBJECT, note.getNoteTitle());
         intent.putExtra(Intent.EXTRA_TEXT, note.getNote());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(intent, "Share via email"));
@@ -132,6 +141,16 @@ public class NotesDetailActivity extends AppCompatActivity {
             // Handle the case where no email app is available
             Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void updateUI() {
+        noteDetailTitleTextView.setText(note.getNoteTitle());
+        noteDetailTextView.setText(note.getNote());
+    }
+
+    protected void onResume() {
+        super.onResume();
+        updateUI();
     }
 
 }

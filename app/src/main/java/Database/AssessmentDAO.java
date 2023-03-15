@@ -10,7 +10,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import Entities.AssessmentTable;
-import Entities.CourseTable;
 
 @Dao
 public interface AssessmentDAO {
@@ -19,7 +18,7 @@ public interface AssessmentDAO {
     long insertAssessment(AssessmentTable assessment);
 
     @Update
-    void updateAssessment(AssessmentTable assessment);
+    int updateAssessment(AssessmentTable assessment);
 
     @Delete
     void deleteAssessment(AssessmentTable assessment);

@@ -1,7 +1,5 @@
 package Database;
 
-import android.provider.ContactsContract;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,7 +18,7 @@ public interface NoteDAO {
     long insertNote(NotesTable note);
 
     @Update
-    void updateNote(NotesTable note);
+    int updateNote(NotesTable note);
 
     @Delete
     void deleteNote(NotesTable note);

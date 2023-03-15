@@ -1,9 +1,9 @@
 package UI.Courses;
 
-        import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
-        import android.app.Activity;
-        import android.content.Intent;
+import android.app.Activity;
+import android.content.Intent;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.ArrayAdapter;
@@ -27,6 +27,7 @@ public class EditCourseActivity extends AppCompatActivity {
     List<CourseTable> courseTableList;
     CourseTable course;
 
+    private int courseId;
     private EditText courseTitleEditText;
     private EditText courseStartEditText;
     private EditText courseEndEditText;
@@ -40,7 +41,11 @@ public class EditCourseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_course);
 
-        CourseDAO dao = AppDatabase.getInstance(getApplicationContext()).courseDAO();
+        courseId = getIntent().getIntExtra("courseId", -1);
+
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+        CourseDAO dao = db.courseDAO();
+        course = dao.getCourseById(courseId);
 
         // INITIALIZE UI ELEMENTS
         courseTitleEditText = findViewById(R.id.courseTitleEditText);
@@ -51,13 +56,15 @@ public class EditCourseActivity extends AppCompatActivity {
         instEmailTextView = findViewById(R.id.instEmailTextView);
         instPhoneTextView = findViewById(R.id.instPhoneTextView);
 
-//        courseTitleEditText.setText(course.getCourseTitle());
-//        courseStartEditText.setText(course.getStartDate());
-//        courseEndEditText.setText(course.getEndDate());
-//        statusSpinner.setPrompt(course.getStatus());
-//        instNameTextView.setText(course.getInstName());
-//        instEmailTextView.setText(course.getInstEmail());
-//        instPhoneTextView.setText(course.getInstPhone());
+        if (course != null) {
+            courseTitleEditText.setText(course.getCourseTitle());
+            courseStartEditText.setText(course.getStartDate());
+            courseEndEditText.setText(course.getEndDate());
+            statusSpinner.setPrompt(course.getStatus());
+            instNameTextView.setText(course.getInstName());
+            instEmailTextView.setText(course.getInstEmail());
+            instPhoneTextView.setText(course.getInstPhone());
+        }
 
         // SET UP STATUS SPINNER
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -79,9 +86,7 @@ public class EditCourseActivity extends AppCompatActivity {
                 String instName = instNameTextView.getText().toString();
                 String instEmail = instEmailTextView.getText().toString();
                 String instPhone = instPhoneTextView.getText().toString();
-                int termId = getIntent().getIntExtra("termId", -1);
 
-                CourseTable course = new CourseTable(title, start, end, status, instName, instEmail, instPhone, termId);
                 courseTableList = dao.getAllCourses();
 
                 // VALIDATE USER INPUT
@@ -91,16 +96,20 @@ public class EditCourseActivity extends AppCompatActivity {
                 } else {
                     AppDatabase db = AppDatabase.getInstance(getApplicationContext());
                     CourseDAO dao = db.courseDAO();
+                    course.setCourseTitle(title);
+                    course.setStartDate(start);
+                    course.setEndDate(end);
+                    course.setStatus(status);
+                    course.setInstName(instName);
+                    course.setInstEmail(instEmail);
+                    course.setInstPhone(instPhone);
                     int courseId = dao.updateCourse(course);
+                    Toast.makeText(EditCourseActivity.this, "Course Modified Successfully!", Toast.LENGTH_SHORT).show();
 
-                    if (courseId == course.getCourseId()) {
-                        Toast.makeText(EditCourseActivity.this, "Course Saved Successfully!", Toast.LENGTH_SHORT).show();
-
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("courseId", (int) courseId);
-                        setResult(Activity.RESULT_OK, resultIntent);
-                        finish();
-                    }
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("courseId", (int) courseId);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
                 }
             }
         });

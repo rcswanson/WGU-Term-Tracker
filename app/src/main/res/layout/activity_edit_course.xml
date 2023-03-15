@@ -10,124 +10,132 @@
         android:id="@+id/courseTitleEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter Course Title"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="106dp"
-        tools:layout_editor_absoluteY="92dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/courseStartEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter Start Date"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseTitleEditText" />
 
     <EditText
         android:id="@+id/courseEndEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter End Date"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseStartEditText" />
 
     <Spinner
         android:id="@+id/statusSpinner"
-        android:entries="@array/status_options"
         android:layout_width="210dp"
         android:layout_height="47dp"
+        android:layout_marginStart="107dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="95dp"
+        android:layout_marginEnd="94dp"
+        android:entries="@array/status_options"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseEndEditText" />
 
     <EditText
         android:id="@+id/instNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="304dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter Instructor Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusSpinner" />
 
     <EditText
         android:id="@+id/instEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="360dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter Instructor Email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instNameTextView" />
 
     <EditText
         android:id="@+id/instPhoneTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="412dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="95dp"
         android:ems="10"
         android:hint="Enter Instructor Phone"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instEmailTextView" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancelEditCourseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="508dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="140dp"
         android:clickable="true"
         android:rotation="45"
+        app:backgroundTint="#C30000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cancelCourseTextView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addModifiedCourse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="508dp"
-        android:layout_marginEnd="204dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="52dp"
         android:clickable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="#4CAF50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <TextView
-        android:id="@+id/cancelCourseTextView"
+        android:id="@+id/activityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="528dp"
-        android:layout_marginEnd="72dp"
-        android:text="Cancel"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="129dp"
+        android:text="Edit Course"
+        android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/addCourseTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="528dp"
-        android:layout_marginEnd="268dp"
-        android:text="Add Modified Course"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

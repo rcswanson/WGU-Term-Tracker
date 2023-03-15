@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.example.termtrackerfinal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Adapters.AssessmentAdapter;
@@ -58,6 +60,8 @@ public class CourseDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
+        int termId = getIntent().getIntExtra("termId", -1);
+
         aRecyclerView = findViewById(R.id.assessmentsView);
         aRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -70,6 +74,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             public void onItemClick(AssessmentTable assessment) {
                 Intent intent = new Intent(CourseDetailActivity.this, AssessmentDetailActivity.class);
                 intent.putExtra("assessmentId", assessment.getAssessId());
+                intent.putExtra("courseId", course.getCourseId());
                 startActivity(intent);
             }
         });
@@ -80,6 +85,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             public void onItemClick(NotesTable note) {
                 Intent intent = new Intent(CourseDetailActivity.this, NotesDetailActivity.class);
                 intent.putExtra("noteId", note.getNoteId());
+                intent.putExtra("courseId", course.getCourseId());
                 startActivity(intent);
             }
         });
@@ -154,6 +160,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CourseDetailActivity.this, EditCourseActivity.class);
                 intent.putExtra("courseId", courseId);
+                intent.putExtra("termId", termId);
                 startActivity(intent);
             }
         });
@@ -196,6 +203,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadAssessNotes(course.getCourseId());
+        updateUI();
     }
 
 }

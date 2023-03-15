@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         assessmentTypeTextView = findViewById(R.id.assessmentTypeTextView);
         dueDateTextView = findViewById(R.id.dueDateTextView);
 
+        int courseId = getIntent().getIntExtra("courseId", -1);
         int assessId = getIntent().getIntExtra("assessmentId", -1);
         if (assessId != -1) {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
@@ -76,13 +78,27 @@ public class AssessmentDetailActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
+        FloatingActionButton modifyAssessment = findViewById(R.id.ModifyAssessmentButton);
+        modifyAssessment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AssessmentDetailActivity.this, EditAssessmentActivity.class);
+                intent.putExtra("assessmentId", assessId);
+                intent.putExtra("courseId", courseId);
+                startActivity(intent);
+            }
+        });
+    }
 
     private void updateUI() {
         assessmentTitleTextView.setText(assessment.getTitle());
         assessmentTypeTextView.setText(assessment.getAssessmentType());
         dueDateTextView.setText(assessment.getDueDate());
-
-        }
     }
+
+    protected void onResume() {
+        super.onResume();
+        updateUI();
+    }
+}
