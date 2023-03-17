@@ -50,16 +50,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coursesView"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="450dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/recycler_view"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDateTextView" />
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,86 +8,108 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Spinner
-        android:id="@+id/assessmentTypeSpinner"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="79dp"
-        android:layout_marginEnd="72dp"
-        android:entries="@array/assessment_types"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAssessmentTextView" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/titleEditText"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="72dp"
-        android:hint="Assessment Title"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/assessmentTypeSpinner" />
+        <Spinner
+            android:id="@+id/assessmentTypeSpinner"
+            android:layout_width="250dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="72dp"
+            android:entries="@array/assessment_types"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.47"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addAssessmentTextView" />
 
-    <EditText
-        android:id="@+id/dueDateEditText"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="72dp"
-        android:hint="Due Date"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleEditText" />
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="250dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="72dp"
+            android:hint="Assessment Title"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentTypeSpinner" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addAssessmentToTableButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="22dp"
-        android:clickable="true"
-        app:backgroundTint="#4CAF50"
-        app:layout_constraintEnd_toStartOf="@+id/cancelAddAssessmentButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dueDateEditText"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <DatePicker
+            android:id="@+id/dueDateView"
+            android:layout_width="296dp"
+            android:layout_height="419dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.529"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/cancelAddAssessmentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="120dp"
-        android:clickable="true"
-        android:rotation="45"
-        app:backgroundTint="#C30000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addAssessmentToTableButton"
-        app:layout_constraintTop_toBottomOf="@+id/dueDateEditText"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addAssessmentToTableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="50dp"
+            android:clickable="true"
+            app:backgroundTint="#4CAF50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cancelAddAssessmentButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dueDateView"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
-    <TextView
-        android:id="@+id/addAssessmentTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="145dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="145dp"
-        android:layout_marginBottom="79dp"
-        android:textSize="30dp"
-        android:text="Add Assessment"
-        app:layout_constraintBottom_toTopOf="@+id/assessmentTypeSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cancelAddAssessmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="120dp"
+            android:layout_marginBottom="50dp"
+            android:clickable="true"
+            android:rotation="45"
+            app:backgroundTint="#C30000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dueDateView"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/addAssessmentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="145dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="145dp"
+            android:layout_marginBottom="79dp"
+            android:text="Add Assessment"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/assessmentTypeSpinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="149dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="149dp"
+            android:text="Due Date"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

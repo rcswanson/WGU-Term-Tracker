@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.security.identity.DocTypeNotSupportedException;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -14,7 +16,11 @@ import android.widget.Toast;
 import com.example.termtrackerfinal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import Database.AppDatabase;
 import Database.CourseDAO;
@@ -27,8 +33,8 @@ public class AddCourseActivity extends AppCompatActivity {
     List<CourseTable> courseTableList;
 
     private EditText courseTitleEditText;
-    private EditText courseStartEditText;
-    private EditText courseEndEditText;
+    private DatePicker courseStartPicker;
+    private DatePicker courseEndPicker;
     private Spinner statusSpinner;
     private EditText instNameTextView;
     private EditText instEmailTextView;
@@ -43,8 +49,8 @@ public class AddCourseActivity extends AppCompatActivity {
 
         // INITIALIZE UI ELEMENTS
         courseTitleEditText = findViewById(R.id.courseTitleEditText);
-        courseStartEditText = findViewById(R.id.courseStartEditText);
-        courseEndEditText = findViewById(R.id.courseEndEditText);
+        courseStartPicker = findViewById(R.id.courseStartPicker);
+        courseEndPicker = findViewById(R.id.courseEndPicker);
         statusSpinner = findViewById(R.id.statusSpinner);
         instNameTextView = findViewById(R.id.instNameTextView);
         instEmailTextView = findViewById(R.id.instEmailTextView);
@@ -64,20 +70,37 @@ public class AddCourseActivity extends AppCompatActivity {
 
                 // RETRIEVE USER INPUT
                 String title = courseTitleEditText.getText().toString();
-                String start = courseStartEditText.getText().toString();
-                String end = courseEndEditText.getText().toString();
                 String status = statusSpinner.getSelectedItem().toString();
                 String instName = instNameTextView.getText().toString();
                 String instEmail = instEmailTextView.getText().toString();
                 String instPhone = instPhoneTextView.getText().toString();
                 int termId = getIntent().getIntExtra("termId", -1);
 
-                CourseTable course = new CourseTable(title, start, end, status, instName, instEmail, instPhone, termId);
+                Calendar sCalendar = Calendar.getInstance();
+                Calendar eCalendar = Calendar.getInstance();
+
+                int sDay = courseStartPicker.getDayOfMonth();
+                int sMonth = courseStartPicker.getMonth();
+                int sYear = courseStartPicker.getYear();
+
+                int eDay = courseEndPicker.getDayOfMonth();
+                int eMonth = courseEndPicker.getMonth();
+                int eYear = courseEndPicker.getYear();
+
+                sCalendar.set(sYear, sMonth, sDay);
+                eCalendar.set(eYear, eMonth, eDay);
+
+                long sDateBeforeFormat = sCalendar.getTimeInMillis();
+                long eDateBeforeFormat = eCalendar.getTimeInMillis();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                String formattedStart = dateFormat.format(new Date(sDateBeforeFormat));
+                String formattedEnd = dateFormat.format(new Date(eDateBeforeFormat));
+
+                CourseTable course = new CourseTable(title, formattedStart, formattedEnd, status, instName, instEmail, instPhone, termId);
                 courseTableList = dao.getAllCourses();
 
                 // VALIDATE USER INPUT
-                if (title.isEmpty() || start.isEmpty() || end.isEmpty() ||
-                        instName.isEmpty() || instEmail.isEmpty() || instPhone.isEmpty()) {
+                if (title.isEmpty() || instName.isEmpty() || instEmail.isEmpty() || instPhone.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Field(s) Are Not Filled In.", Toast.LENGTH_SHORT).show();
                 } else {
                     AppDatabase db = AppDatabase.getInstance(getApplicationContext());

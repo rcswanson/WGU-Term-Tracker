@@ -1,147 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="UI.Terms.AddTermActivity">
+    tools:context="UI.Courses.AddCourseActivity">
 
-    <EditText
-        android:id="@+id/courseTitleEditText"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter Course Title"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/courseStartEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter Start Date"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseTitleEditText" />
+        <EditText
+            android:id="@+id/courseTitleEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="101dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="101dp"
+            android:ems="10"
+            android:hint="Enter Course Title"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <EditText
-        android:id="@+id/courseEndEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter End Date"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseStartEditText" />
+        <DatePicker
+            android:id="@+id/courseStartPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="31dp"
+            android:ems="10"
+            android:hint="Enter Start Date"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statusSpinner" />
 
-    <Spinner
-        android:id="@+id/statusSpinner"
-        android:layout_width="210dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:entries="@array/status_options"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseEndEditText" />
+        <DatePicker
+            android:id="@+id/courseEndPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="30dp"
+            android:ems="10"
+            android:hint="Enter End Date"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseStartPicker" />
 
-    <EditText
-        android:id="@+id/instNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter Instructor Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusSpinner" />
+        <Spinner
+            android:id="@+id/statusSpinner"
+            android:layout_width="210dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="101dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="101dp"
+            android:entries="@array/status_options"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instEmailTextView" />
 
-    <EditText
-        android:id="@+id/instEmailTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter Instructor Email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instNameTextView" />
+        <EditText
+            android:id="@+id/instNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="101dp"
+            android:ems="10"
+            android:hint="Enter Instructor Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseTitleEditText" />
 
-    <EditText
-        android:id="@+id/instPhoneTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:hint="Enter Instructor Phone"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instEmailTextView" />
+        <EditText
+            android:id="@+id/instEmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginStart="101dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="100dp"
+            android:ems="10"
+            android:hint="Enter Instructor Email"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/cancelAddCourseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="125dp"
-        android:clickable="true"
-        android:rotation="45"
-        app:backgroundTint="#E30000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addCourseToTableButton"
-        app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <EditText
+            android:id="@+id/instPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="101dp"
+            android:ems="10"
+            android:hint="Enter Instructor Phone"
+            android:inputType="phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instNameTextView" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addCourseToTableButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="22dp"
-        android:clickable="true"
-        app:backgroundTint="#4CAF50"
-        app:layout_constraintEnd_toStartOf="@+id/cancelAddCourseButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cancelAddCourseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="125dp"
+            android:layout_marginBottom="50dp"
+            android:clickable="true"
+            android:rotation="45"
+            app:backgroundTint="#E30000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseEndPicker"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="169dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="169dp"
-        android:layout_marginBottom="35dp"
-        android:textSize="20dp"
-        android:text="Add Course"
-        app:layout_constraintBottom_toTopOf="@+id/courseTitleEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addCourseToTableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="125dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="49dp"
+            android:layout_marginBottom="50dp"
+            android:clickable="true"
+            app:backgroundTint="#4CAF50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cancelAddCourseButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseEndPicker"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Course"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="51dp"
+            android:layout_marginEnd="75dp"
+            android:layout_marginBottom="414dp"
+            android:text="End Date"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/cancelAddCourseButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseStartPicker" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="51dp"
+            android:layout_marginEnd="75dp"
+            android:layout_marginBottom="384dp"
+            android:text="Start Date"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/courseEndPicker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statusSpinner" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

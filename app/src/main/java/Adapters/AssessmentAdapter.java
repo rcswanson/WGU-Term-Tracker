@@ -55,7 +55,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
         AssessmentTable assessment = assessmentList.get(position);
         holder.assessmentTitleTextView.setText(assessment.getTitle());
         holder.assessmentTypeTextView.setText(assessment.getAssessmentType());
-        holder.assessmentDueDateTextView.setText(assessment.getDueDate());
+        holder.assessmentDueDateTextView.setText(String.valueOf(assessment.getDueDate()));
     }
 
     @Override

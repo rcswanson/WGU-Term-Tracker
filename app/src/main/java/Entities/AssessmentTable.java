@@ -4,6 +4,9 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @Entity(tableName = "assessments_table", foreignKeys = @ForeignKey(
         entity = CourseTable.class, parentColumns = "courseId",
         childColumns = "assessCourseId", onDelete = ForeignKey.CASCADE))

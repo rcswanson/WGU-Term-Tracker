@@ -50,5 +50,8 @@
         <item>Performance Assessment</item>
     </string-array>
 
+    -- NOTIFICATION RECEIVER
+    <string name="channel_name">channel</string>
+    <string name="channel_description">description</string>
 
 </resources>

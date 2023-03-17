@@ -2,10 +2,12 @@ package UI.Courses;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +18,10 @@ import android.widget.Toast;
 import com.example.termtrackerfinal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +40,8 @@ import UI.Assessments.AssessmentDetailActivity;
 import UI.Notes.AddNotesActivity;
 import UI.Notes.NotesDetailActivity;
 import UI.Terms.TermDetailActivity;
+import Utilities.NotificationController;
+import Utilities.NotificationReceiver;
 
 public class CourseDetailActivity extends AppCompatActivity {
 
@@ -44,6 +51,9 @@ public class CourseDetailActivity extends AppCompatActivity {
     NotesAdapter nAdapter;
     List<AssessmentTable> assessmentList;
     List<NotesTable> notesList;
+
+    private String start;
+    private String end;
 
     private CourseTable course;
     private TextView courseTitleTextView;
@@ -60,14 +70,79 @@ public class CourseDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
+        // INITIALIZES START AND END DATES FOR NOTIFICATIONS
+
+        start = course.getStartDate();
+        end = course.getEndDate();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        Date notifyStart = null;
+        try {
+            notifyStart = format.parse(start);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Date notifyEnd = null;
+        try {
+            notifyEnd = format.parse(end);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        // CREATES NOTIFICATION CHANNEL
+        NotificationController.createNotificationChannel(this);
+
+        // SCHEDULE START DATE NOTIFICATION
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(notifyStart);
+        startCalendar.set(Calendar.HOUR_OF_DAY, 12); // Set the notification time to 9AM
+        startCalendar.set(Calendar.MINUTE, 23);
+        startCalendar.set(Calendar.SECOND, 0);
+
+        long startNotificationTime = startCalendar.getTimeInMillis();
+        long currentTime = System.currentTimeMillis();
+
+        if (startNotificationTime > currentTime) {
+            // The start notification time is in the future
+            Intent startIntent = new Intent(this, NotificationReceiver.class);
+            startIntent.putExtra(NotificationReceiver.NOTIFICATION_TITLE, "Course Start Date");
+            startIntent.putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, "Your course starts today.");
+            PendingIntent startPendingIntent = PendingIntent.getBroadcast(this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, startNotificationTime, startPendingIntent);
+        }
+
+        // Schedule end date notification
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(notifyEnd);
+        endCalendar.set(Calendar.HOUR_OF_DAY, 9); // Set the notification time to 9AM
+        endCalendar.set(Calendar.MINUTE, 0);
+        endCalendar.set(Calendar.SECOND, 0);
+
+        long endNotificationTime = endCalendar.getTimeInMillis();
+
+        if (endNotificationTime > currentTime) {
+            // The end notification time is in the future
+            Intent endIntent = new Intent(this, NotificationReceiver.class);
+            endIntent.putExtra(NotificationReceiver.NOTIFICATION_TITLE, "Course End Date");
+            endIntent.putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, "Your course ends today.");
+            PendingIntent endPendingIntent = PendingIntent.getBroadcast(this, 1, endIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, endNotificationTime, endPendingIntent);
+        }
+
+
+        // GETS THE INTENT FROM THE PREVIOUS ACTIVITY
         int termId = getIntent().getIntExtra("termId", -1);
 
+        // SETS RECYCLER VIEWS FROM THE XML FILE
         aRecyclerView = findViewById(R.id.assessmentsView);
         aRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         nRecyclerView = findViewById(R.id.notesView);
         nRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // SENDS USER TO A DETAIL ACTIVITY WHEN CLICKING ON AN ASSESSMENT
         assessmentList = new ArrayList<>();
         aAdapter = new AssessmentAdapter(assessmentList, new AssessmentAdapter.OnItemClickListener() {
             @Override
@@ -79,6 +154,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             }
         });
 
+        // SENDS USER TO DETAIL ACTIVITY WHEN CLICKING ON A NOTE
         notesList = new ArrayList<>();
         nAdapter = new NotesAdapter(notesList, new NotesAdapter.OnItemClickListener() {
             @Override
@@ -161,6 +237,8 @@ public class CourseDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(CourseDetailActivity.this, EditCourseActivity.class);
                 intent.putExtra("courseId", courseId);
                 intent.putExtra("termId", termId);
+                intent.putExtra("startDate", course.getStartDate());
+                intent.putExtra("endDate", course.getEndDate());
                 startActivity(intent);
             }
         });

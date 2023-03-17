@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -14,7 +15,11 @@ import android.widget.Toast;
 import com.example.termtrackerfinal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import Database.AppDatabase;
 import Database.AssessmentDAO;
@@ -28,11 +33,7 @@ public class AddAssessmentActivity extends AppCompatActivity {
 
     private Spinner assessmentTypeSpinner;
     private EditText assessmentTitleEditText;
-    private EditText assessmentDueDateEditText;
-
-    private AppDatabase db;
-
-    private String selectedAssessmentType;
+    private DatePicker assessmentDueDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,14 @@ public class AddAssessmentActivity extends AppCompatActivity {
 
         assessmentTypeSpinner = findViewById(R.id.assessmentTypeSpinner);
         assessmentTitleEditText = findViewById(R.id.titleEditText);
-        assessmentDueDateEditText = findViewById(R.id.dueDateEditText);
+        assessmentDueDate = findViewById(R.id.dueDateView);
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        assessmentDueDate.init(year, month, day, null);
 
         // SET UP TYPE SPINNER
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -58,13 +66,22 @@ public class AddAssessmentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String type = assessmentTypeSpinner.getSelectedItem().toString();
                 String title = assessmentTitleEditText.getText().toString();
-                String dueDate = assessmentDueDateEditText.getText().toString();
+
+                int day = assessmentDueDate.getDayOfMonth();
+                int month = assessmentDueDate.getMonth();
+                int year = assessmentDueDate.getYear();
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+                long dateBeforeFormat = calendar.getTimeInMillis();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                String formattedDueDate = dateFormat.format(new Date(dateBeforeFormat));
+
                 int assessCourseId = getIntent().getIntExtra("courseId", -1);
 
-                AssessmentTable assessment = new AssessmentTable(type, title, dueDate, assessCourseId);
+                AssessmentTable assessment = new AssessmentTable(type, title, formattedDueDate, assessCourseId);
 
                 // VALIDATE USER INPUT
-                if (title.isEmpty() || dueDate.isEmpty()) {
+                if (title.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Field(s) Are Not Filled In.", Toast.LENGTH_SHORT).show();
                 } else {
                     AppDatabase db = AppDatabase.getInstance(getApplicationContext());
