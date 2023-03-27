@@ -1,11 +1,18 @@
 package UI.Assessments;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,22 +24,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import Adapters.AssessmentAdapter;
 import Database.AppDatabase;
 import Database.AssessmentDAO;
 import Database.CourseDAO;
 import Entities.AssessmentTable;
+import UI.Courses.CourseDetailActivity;
+import UI.MainActivity;
+import Utilities.NotifyReceiver;
 
 public class AssessmentDetailActivity extends AppCompatActivity {
 
-    AssessmentAdapter adapter;
-
-    private String due;
     private AssessmentTable assessment;
     private TextView assessmentTitleTextView;
     private TextView assessmentTypeTextView;
-    private TextView dueDateTextView;
+    private TextView startDateTextView;
+    private TextView endDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,44 +50,20 @@ public class AssessmentDetailActivity extends AppCompatActivity {
 
         assessmentTitleTextView = findViewById(R.id.assessmentTitleTextView);
         assessmentTypeTextView = findViewById(R.id.assessmentTypeTextView);
-        dueDateTextView = findViewById(R.id.dueDateTextView);
+        startDateTextView = findViewById(R.id.startDateTextView);
+        endDateTextView = findViewById(R.id.endDateTextView);
 
         int courseId = getIntent().getIntExtra("courseId", -1);
         int assessId = getIntent().getIntExtra("assessmentId", -1);
-
-        Calendar calendar = Calendar.getInstance();
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = calendar.get(Calendar.MINUTE);
-
-        int desiredHour = 8;
-        int desiredMinute = 0;
 
         if (assessId != -1) {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
             AssessmentDAO dao = db.assessmentDAO();
             assessment = dao.getAssessmentById(assessId);
-
             if (assessment != null) {
-                // Retrieve the start date of the course
-                Date currentDate = new Date();
-                String dueDateString = assessment.getDueDate();
-                SimpleDateFormat DateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                Date startDate = null;
-                try {
-                    startDate = DateFormat.parse(dueDateString);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                if (currentDate.equals(startDate)) {
-                    if (currentHour == desiredHour && currentMinute == desiredMinute) {
-                        Intent intent = new Intent("com.example.notification.ACTION_NOTIFICATION");
-                        intent.putExtra("title", "Assessment: " + assessment.getTitle());
-                        intent.putExtra("message", "Your Assessment " + assessment.getTitle() + "is due today!");
-                        sendBroadcast(intent);
-                    }
-                }
+                updateUI();
             }
-        }
+            }
 
         FloatingActionButton deleteAssessment = findViewById(R.id.DeleteAssessmentButton);
         deleteAssessment.setOnClickListener(new View.OnClickListener() {
@@ -112,16 +97,79 @@ public class AssessmentDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(AssessmentDetailActivity.this, EditAssessmentActivity.class);
                 intent.putExtra("assessmentId", assessId);
                 intent.putExtra("courseId", courseId);
-                intent.putExtra("dueDate", assessment.getDueDate());
+                intent.putExtra("startDate", assessment.getStartDate());
+                intent.putExtra("endDate", assessment.getEndDate());
+
                 startActivity(intent);
             }
         });
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.assessmentmenuitems, menu);
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.notifyStart:
+                Toast.makeText(getApplicationContext(), "A notification is now set to alert you at 9AM on the day of your assessment start date", Toast.LENGTH_LONG).show();
+                String startDateString = assessment.getStartDate();
+                Date startDate = null;
+                try {
+                    startDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).parse(startDateString);
+                } catch (ParseException pe) {
+                    pe.printStackTrace();
+                }
+                if (startDate != null) {
+                    Calendar sCalendar = Calendar.getInstance();
+                    sCalendar.setTimeInMillis(startDate.getTime());
+                    sCalendar.set(Calendar.HOUR_OF_DAY, 8);
+                    sCalendar.set(Calendar.MINUTE, 11);
+                    sCalendar.set(Calendar.SECOND, 0);
+
+                    Intent startIntent = new Intent(AssessmentDetailActivity.this, NotifyReceiver.class);
+                    startIntent.putExtra("key", " Your assessment: " + assessment.getTitle() + " Starts Today!");
+                    PendingIntent sPendingIntent = PendingIntent.getBroadcast(AssessmentDetailActivity.this, MainActivity.numAlert++, startIntent, PendingIntent.FLAG_MUTABLE);
+                    AlarmManager sAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    sAlarmManager.set(AlarmManager.RTC_WAKEUP, sCalendar.getTimeInMillis(), sPendingIntent);
+                }
+                return true;
+
+            case R.id.notifyEnd:
+                Toast.makeText(getApplicationContext(), "A notification is now set to alert you at 9AM on the day of your assessment end date", Toast.LENGTH_LONG).show();
+                String endDateString = assessment.getEndDate();
+                Date endDate = null;
+                try {
+                    endDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).parse(endDateString);
+                } catch (ParseException pe) {
+                    pe.printStackTrace();
+                }
+                if (endDate != null) {
+                    Calendar eCalendar = Calendar.getInstance();
+                    eCalendar.setTimeInMillis(endDate.getTime());
+                    eCalendar.set(Calendar.HOUR_OF_DAY, 8);
+                    eCalendar.set(Calendar.MINUTE, 11);
+                    eCalendar.set(Calendar.SECOND, 0);
+
+
+                    Intent endIntent = new Intent(AssessmentDetailActivity.this, NotifyReceiver.class);
+                    endIntent.putExtra("key", "Your assessment: " + assessment.getTitle() + " Ends Today");
+                    PendingIntent ePendingIntent = PendingIntent.getBroadcast(AssessmentDetailActivity.this, MainActivity.numAlert++, endIntent, PendingIntent.FLAG_MUTABLE);
+                    AlarmManager eAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    eAlarmManager.set(AlarmManager.RTC_WAKEUP, eCalendar.getTimeInMillis(), ePendingIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void updateUI() {
         assessmentTitleTextView.setText(assessment.getTitle());
         assessmentTypeTextView.setText(assessment.getAssessmentType());
-        dueDateTextView.setText(assessment.getDueDate());
+        startDateTextView.setText(assessment.getStartDate());
+        endDateTextView.setText(assessment.getEndDate());
     }
 
     protected void onResume() {

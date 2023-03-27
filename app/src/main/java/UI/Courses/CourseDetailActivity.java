@@ -1,5 +1,6 @@
 package UI.Courses;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +55,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     List<AssessmentTable> assessmentList;
     List<NotesTable> notesList;
 
-    private CourseTable courseTable;
+    private CourseTable course;
     private TextView courseTitleTextView;
     private TextView courseStartTextView;
     private TextView courseEndTextView;
@@ -72,60 +74,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         int termId = getIntent().getIntExtra("termId", -1);
         int courseId = getIntent().getIntExtra("courseId", -1);
 
-        CourseDAO courseDao = AppDatabase.getInstance(this).courseDAO();
-        CourseTable course = courseDao.getCourseById(courseId);
-
-        Intent startIntent = new Intent(this, NotifyReceiver.class);
-        startIntent.putExtra("key", "Your Course " + course.getCourseTitle() + " Starts Today!");
-        startIntent.putExtra("notification_id", MainActivity.numAlert++); // unique id for the notification
-        PendingIntent startPendingIntent = PendingIntent.getBroadcast(this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Get the current date and time
-        Calendar startCalendar = Calendar.getInstance();
-
-        // Set the time to 8:00 AM
-        startCalendar.set(Calendar.HOUR_OF_DAY, 5);
-        startCalendar.set(Calendar.MINUTE, 41);
-        startCalendar.set(Calendar.SECOND, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        // Start Date
-        String startDate = course.getStartDate();
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).parse(startDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        startCalendar.setTime(date);
-        Long startTrigger = startCalendar.getTimeInMillis();
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, startTrigger, startPendingIntent);
-
-        // Get the current date and time
-        Calendar endCalendar = Calendar.getInstance();
-
-        // Set the time to 8:00 AM
-        endCalendar.set(Calendar.HOUR_OF_DAY, 8);
-        endCalendar.set(Calendar.MINUTE, 0);
-        endCalendar.set(Calendar.SECOND, 0);
-
-        // End Date
-        Intent endIntent = new Intent(this, NotifyReceiver.class);
-        endIntent.putExtra("key", "Your Course " + course.getCourseTitle() + " Ends Today!");
-        endIntent.putExtra("notification_id", MainActivity.numAlert++); // unique id for the notification
-        PendingIntent endPendingIntent = PendingIntent.getBroadcast(this, 0, endIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        String endDate = course.getEndDate();
-        try {
-            date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).parse(endDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        endCalendar.setTime(date);
-        Long endTrigger = startCalendar.getTimeInMillis();
-        alarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endPendingIntent);
-
-
         // SETS RECYCLER VIEWS FROM THE XML FILE
         aRecyclerView = findViewById(R.id.assessmentsView);
         aRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -139,7 +87,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             public void onItemClick(AssessmentTable assessment) {
                 Intent intent = new Intent(CourseDetailActivity.this, AssessmentDetailActivity.class);
                 intent.putExtra("assessmentId", assessment.getAssessId());
-                intent.putExtra("courseId", courseTable.getCourseId());
+                intent.putExtra("courseId", course.getCourseId());
                 startActivity(intent);
             }
         });
@@ -151,7 +99,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             public void onItemClick(NotesTable note) {
                 Intent intent = new Intent(CourseDetailActivity.this, NotesDetailActivity.class);
                 intent.putExtra("noteId", note.getNoteId());
-                intent.putExtra("courseId", courseTable.getCourseId());
+                intent.putExtra("courseId", course.getCourseId());
                 startActivity(intent);
             }
         });
@@ -159,8 +107,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         aRecyclerView.setAdapter(aAdapter);
         nRecyclerView.setAdapter(nAdapter);
 
-
-        // Initialize views
         courseTitleTextView = findViewById(R.id.courseTitleTextView);
         courseStartTextView = findViewById(R.id.courseStartTextView);
         courseEndTextView = findViewById(R.id.courseEndTextView);
@@ -193,10 +139,10 @@ public class CourseDetailActivity extends AppCompatActivity {
         deleteCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (courseTable != null) {
+                if (course != null) {
                     AppDatabase db = AppDatabase.getInstance(getApplicationContext());
                     AssessmentDAO dao = db.assessmentDAO();
-                    List<AssessmentTable> assessments = dao.getAssessmentsForCourse(courseTable.getCourseId());
+                    List<AssessmentTable> assessments = dao.getAssessmentsForCourse(course.getCourseId());
                     if (assessments.isEmpty()) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(CourseDetailActivity.this);
                         alert.setMessage("Are you sure you want to delete this course?");
@@ -205,7 +151,7 @@ public class CourseDetailActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 AppDatabase db = AppDatabase.getInstance(getApplicationContext());
                                 CourseDAO dao = db.courseDAO();
-                                dao.deleteCourse(courseTable);
+                                dao.deleteCourse(course);
                                 setResult(RESULT_OK);
                                 finish();
                             }
@@ -226,8 +172,8 @@ public class CourseDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(CourseDetailActivity.this, EditCourseActivity.class);
                 intent.putExtra("courseId", courseId);
                 intent.putExtra("termId", termId);
-                intent.putExtra("startDate", courseTable.getStartDate());
-                intent.putExtra("endDate", courseTable.getEndDate());
+                intent.putExtra("startDate", course.getStartDate());
+                intent.putExtra("endDate", course.getEndDate());
                 startActivity(intent);
             }
         });
@@ -245,15 +191,70 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.coursedetailrefresh, menu);
+        getMenuInflater().inflate(R.menu.coursemenuitems, menu);
         return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.notifyStart:
+                Toast.makeText(getApplicationContext(), "A notification is now set to alert you at 9AM on the day of your course start date", Toast.LENGTH_LONG).show();
+                String startDateString = course.getStartDate();
+                Date startDate = null;
+                try {
+                    startDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).parse(startDateString);
+                } catch (ParseException pe) {
+                    pe.printStackTrace();
+                }
+                if (startDate != null) {
+                    Calendar sCalendar = Calendar.getInstance();
+                    sCalendar.setTimeInMillis(startDate.getTime());
+                    sCalendar.set(Calendar.HOUR_OF_DAY, 8);
+                    sCalendar.set(Calendar.MINUTE, 6);
+                    sCalendar.set(Calendar.SECOND, 0);
+
+                    Intent startIntent = new Intent(CourseDetailActivity.this, NotifyReceiver.class);
+                    startIntent.putExtra("key", " Your course: " + course.getCourseTitle() + ": Starts Today!");
+                    PendingIntent sPendingIntent = PendingIntent.getBroadcast(CourseDetailActivity.this, MainActivity.numAlert++, startIntent, PendingIntent.FLAG_MUTABLE);
+                    AlarmManager sAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    sAlarmManager.set(AlarmManager.RTC_WAKEUP, sCalendar.getTimeInMillis(), sPendingIntent);
+                }
+                return true;
+
+                case R.id.notifyEnd:
+                    Toast.makeText(getApplicationContext(), "A notification is now set to alert you at 9AM on the day of your course end date", Toast.LENGTH_LONG).show();
+                String endDateString = course.getEndDate();
+                Date endDate = null;
+                try {
+                    endDate = new SimpleDateFormat("MM/dd/yyyy", Locale.US).parse(endDateString);
+                } catch (ParseException pe) {
+                    pe.printStackTrace();
+                }
+                if (endDate != null) {
+                    Calendar eCalendar = Calendar.getInstance();
+                    eCalendar.setTimeInMillis(endDate.getTime());
+                    eCalendar.set(Calendar.HOUR_OF_DAY, 9);
+                    eCalendar.set(Calendar.MINUTE, 0);
+                    eCalendar.set(Calendar.SECOND, 0);
+
+
+                    Intent endIntent = new Intent(CourseDetailActivity.this, NotifyReceiver.class);
+                    endIntent.putExtra("key", "Your course: " + course.getCourseTitle() + "Ends Today");
+                    PendingIntent ePendingIntent = PendingIntent.getBroadcast(CourseDetailActivity.this, MainActivity.numAlert++, endIntent, PendingIntent.FLAG_MUTABLE);
+                    AlarmManager eAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    eAlarmManager.set(AlarmManager.RTC_WAKEUP, eCalendar.getTimeInMillis(), ePendingIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
     private void loadAssessNotes(int courseId) {
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         AssessmentDAO aDao = db.assessmentDAO();
-        NoteDAO nDao = AppDatabase.getInstance(this).noteDAO();
+        NoteDAO nDao = db.noteDAO();
         assessmentList = aDao.getAssessmentsForCourse(courseId);
         notesList = nDao.getNotesForCourse(courseId);
         aAdapter.setAssessmentList(assessmentList);
@@ -262,21 +263,21 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void updateUI() {
         // Set text for the views
-        courseTitleTextView.setText(courseTable.getCourseTitle());
-        courseStartTextView.setText(courseTable.getStartDate());
-        courseEndTextView.setText(courseTable.getEndDate());
-        courseStatusTextView.setText(courseTable.getStatus());
-        instNameTextView.setText(courseTable.getInstName());
-        instEmailTextView.setText(courseTable.getInstEmail());
-        instPhoneTextView.setText(courseTable.getInstPhone());
+        courseTitleTextView.setText(course.getCourseTitle());
+        courseStartTextView.setText(course.getStartDate());
+        courseEndTextView.setText(course.getEndDate());
+        courseStatusTextView.setText(course.getStatus());
+        instNameTextView.setText(course.getInstName());
+        instEmailTextView.setText(course.getInstEmail());
+        instPhoneTextView.setText(course.getInstPhone());
 
-        loadAssessNotes(courseTable.getCourseId());
+        loadAssessNotes(course.getCourseId());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadAssessNotes(courseTable.getCourseId());
+        loadAssessNotes(course.getCourseId());
         updateUI();
     }
 

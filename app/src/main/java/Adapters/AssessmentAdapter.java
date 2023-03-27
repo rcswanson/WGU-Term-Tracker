@@ -55,7 +55,8 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
         AssessmentTable assessment = assessmentList.get(position);
         holder.assessmentTitleTextView.setText(assessment.getTitle());
         holder.assessmentTypeTextView.setText(assessment.getAssessmentType());
-        holder.assessmentDueDateTextView.setText(String.valueOf(assessment.getDueDate()));
+        holder.assessmentStartDateTextView.setText(String.valueOf(assessment.getStartDate()));
+        holder.assessmentEndDateTextView.setText(String.valueOf(assessment.getEndDate()));
     }
 
     @Override
@@ -71,13 +72,15 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
     public class AssessmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView assessmentTitleTextView;
         public TextView assessmentTypeTextView;
-        public TextView assessmentDueDateTextView;
+        public TextView assessmentStartDateTextView;
+        public TextView assessmentEndDateTextView;
 
         public AssessmentViewHolder(@NonNull View itemView) {
             super(itemView);
             assessmentTitleTextView = itemView.findViewById(R.id.assessmentTitleTextView);
             assessmentTypeTextView = itemView.findViewById(R.id.assessmentTypeTextView);
-            assessmentDueDateTextView = itemView.findViewById(R.id.assessmentDueDateTextView);
+            assessmentStartDateTextView = itemView.findViewById(R.id.assessmentStartDateTextView);
+            assessmentEndDateTextView = itemView.findViewById(R.id.assessmentEndDateTextView);
 
             itemView.setOnClickListener(this);
         }

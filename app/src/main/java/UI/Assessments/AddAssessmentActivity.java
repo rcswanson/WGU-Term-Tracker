@@ -33,7 +33,8 @@ public class AddAssessmentActivity extends AppCompatActivity {
 
     private Spinner assessmentTypeSpinner;
     private EditText assessmentTitleEditText;
-    private DatePicker assessmentDueDate;
+    private DatePicker assessmentStartDate;
+    private DatePicker assessmentEndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +45,15 @@ public class AddAssessmentActivity extends AppCompatActivity {
 
         assessmentTypeSpinner = findViewById(R.id.assessmentTypeSpinner);
         assessmentTitleEditText = findViewById(R.id.titleEditText);
-        assessmentDueDate = findViewById(R.id.dueDateView);
+        assessmentStartDate = findViewById(R.id.startDateView);
+        assessmentEndDate = findViewById(R.id.endDateView);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        assessmentDueDate.init(year, month, day, null);
+        assessmentStartDate.init(year, month, day, null);
 
         // SET UP TYPE SPINNER
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -67,18 +69,26 @@ public class AddAssessmentActivity extends AppCompatActivity {
                 String type = assessmentTypeSpinner.getSelectedItem().toString();
                 String title = assessmentTitleEditText.getText().toString();
 
-                int day = assessmentDueDate.getDayOfMonth();
-                int month = assessmentDueDate.getMonth();
-                int year = assessmentDueDate.getYear();
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-                long dateBeforeFormat = calendar.getTimeInMillis();
+                int sDay = assessmentStartDate.getDayOfMonth();
+                int sMonth = assessmentStartDate.getMonth();
+                int sYear = assessmentStartDate.getYear();
+
+                int eDay = assessmentEndDate.getDayOfMonth();
+                int eMonth = assessmentEndDate.getMonth();
+                int eYear = assessmentEndDate.getYear();
+                Calendar sCalendar = Calendar.getInstance();
+                Calendar eCalendar = Calendar.getInstance();
+                sCalendar.set(sYear, sMonth, sDay);
+                eCalendar.set(eYear, eMonth, eDay);
+                long startBeforeFormat = sCalendar.getTimeInMillis();
+                long endBeforeFormat = eCalendar.getTimeInMillis();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                String formattedDueDate = dateFormat.format(new Date(dateBeforeFormat));
+                String formattedStartDate = dateFormat.format(new Date(startBeforeFormat));
+                String formattedEndDate = dateFormat.format(new Date(endBeforeFormat));
 
                 int assessCourseId = getIntent().getIntExtra("courseId", -1);
 
-                AssessmentTable assessment = new AssessmentTable(type, title, formattedDueDate, assessCourseId);
+                AssessmentTable assessment = new AssessmentTable(type, title, formattedStartDate, formattedEndDate, assessCourseId);
 
                 // VALIDATE USER INPUT
                 if (title.isEmpty()) {

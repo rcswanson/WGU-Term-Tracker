@@ -16,14 +16,16 @@ public class AssessmentTable {
     private int assessId;
     private String assessmentType;
     private String title;
-    private String dueDate;
+    private String startDate;
+    private String endDate;
 
     private int assessCourseId;
 
-    public AssessmentTable(String assessmentType, String title, String dueDate, int assessCourseId) {
+    public AssessmentTable(String assessmentType, String title, String startDate, String endDate, int assessCourseId) {
         this.assessmentType = assessmentType;
         this.title = title;
-        this.dueDate = dueDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.assessCourseId = assessCourseId;
     }
 
@@ -51,13 +53,17 @@ public class AssessmentTable {
         this.title = title;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
+
+    public String getEndDate() { return endDate; }
+
+    public void setEndDate(String endDate) { this.endDate = endDate; }
 
     public int getAssessCourseId() { return assessCourseId; }
 

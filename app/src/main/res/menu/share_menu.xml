@@ -2,9 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" android:name="TODO">
     <item
-        android:id="@+id/share_message"
-        android:title="Share via Message" />
-    <item
         android:id="@+id/share_email"
-        android:title="Share via Email" />
+        android:title="Share" />
 </menu>

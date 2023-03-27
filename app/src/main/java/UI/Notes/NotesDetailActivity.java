@@ -104,9 +104,6 @@ public class NotesDetailActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.share_message:
-                        shareMessage();
-                        return true;
                     case R.id.share_email:
                         shareEmail();
                         return true;
@@ -118,28 +115,16 @@ public class NotesDetailActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
-    private void shareMessage() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("smsto:"));  // This ensures only SMS apps respond
-        intent.putExtra("sms_body", note.getNote());  // The message to share
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            // Handle the case where no SMS app is available
-            Toast.makeText(this, "No messaging app found", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void shareEmail() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, note.getNoteTitle());
         intent.putExtra(Intent.EXTRA_TEXT, note.getNote());
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(Intent.createChooser(intent, "Share via email"));
+            startActivity(Intent.createChooser(intent, "Share"));
         } else {
             // Handle the case where no email app is available
-            Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No apps found", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -11,7 +11,7 @@ import Entities.CourseTable;
 import Entities.NotesTable;
 import Entities.TermTable;
 
-@Database(entities = {TermTable.class, CourseTable.class, AssessmentTable.class, NotesTable.class}, version = 11, exportSchema = false)
+@Database(entities = {TermTable.class, CourseTable.class, AssessmentTable.class, NotesTable.class}, version = 13, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;

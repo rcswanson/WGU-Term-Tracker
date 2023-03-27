@@ -34,12 +34,14 @@ public class EditAssessmentActivity extends AppCompatActivity {
     List<AssessmentTable> assessmentTableList;
     AssessmentTable assessment;
 
-    private String dueDateIntent;
+    private String startDateIntent;
+    private String endDateIntent;
     private int courseId;
     private int assessmentId;
     private Spinner assessmentTypeSpinner;
     private EditText titleEditText;
-    private DatePicker dueDateView;
+    private DatePicker startDateView;
+    private DatePicker endDateView;
 
     private DatePickerDialog.OnDateSetListener dueDateSetListener;
 
@@ -51,7 +53,8 @@ public class EditAssessmentActivity extends AppCompatActivity {
         // RECEIVES INTENT FROM PREVIOUS ACTIVITY
         assessmentId = getIntent().getIntExtra("assessmentId", -1);
         courseId = getIntent().getIntExtra("courseId", -1);
-        dueDateIntent = getIntent().getStringExtra("dueDate");
+        startDateIntent = getIntent().getStringExtra("startDate");
+        endDateIntent = getIntent().getStringExtra("endDate");
 
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
         AssessmentDAO dao = db.assessmentDAO();
@@ -60,18 +63,27 @@ public class EditAssessmentActivity extends AppCompatActivity {
         // INITIALIZES XML LAYOUTS
         assessmentTypeSpinner = findViewById(R.id.assessmentTypeSpinner);
         titleEditText = findViewById(R.id.titleEditText);
-        dueDateView = findViewById(R.id.dueDateView);
+        startDateView = findViewById(R.id.startDateView);
+        endDateView = findViewById(R.id.endDateView);
 
         // INITIALIZES DATE PICKER FORMATS
-        Calendar calendar = Calendar.getInstance();
+        Calendar sCalendar = Calendar.getInstance();
+        Calendar eCalendar = Calendar.getInstance();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-        try {
-            Date dueDate = dateFormat.parse(dueDateIntent);
-            calendar.setTime(dueDate);
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            dueDateView.init(year, month, day, null);
+        try{
+            Date start = dateFormat.parse(startDateIntent);
+            Date end = dateFormat.parse(endDateIntent);
+            sCalendar.setTime(start);
+            eCalendar.setTime(end);
+            int sYear = sCalendar.get(Calendar.YEAR);
+            int sMonth = sCalendar.get(Calendar.MONTH);
+            int sDay = sCalendar.get(Calendar.DAY_OF_MONTH);
+            int eYear = eCalendar.get(Calendar.YEAR);
+            int eMonth = eCalendar.get(Calendar.MONTH);
+            int eDay = eCalendar.get(Calendar.DAY_OF_MONTH);
+            startDateView.init(sYear, sMonth, sDay, null);
+            endDateView.init(eYear, eMonth, eDay, null);
         } catch (ParseException pe) {
             pe.printStackTrace();
         }
@@ -89,14 +101,22 @@ public class EditAssessmentActivity extends AppCompatActivity {
                 String type = assessmentTypeSpinner.getSelectedItem().toString();
                 String title = titleEditText.getText().toString();
 
-                int day = dueDateView.getDayOfMonth();
-                int month = dueDateView.getMonth();
-                int year = dueDateView.getYear();
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-                long dateBeforeFormat = calendar.getTimeInMillis();
+                int sDay = startDateView.getDayOfMonth();
+                int sMonth = startDateView.getMonth();
+                int sYear = startDateView.getYear();
+
+                int eDay = endDateView.getDayOfMonth();
+                int eMonth = endDateView.getMonth();
+                int eYear = endDateView.getYear();
+                Calendar sCalendar = Calendar.getInstance();
+                Calendar eCalendar = Calendar.getInstance();
+                sCalendar.set(sYear, sMonth, sDay);
+                eCalendar.set(eYear, eMonth, eDay);
+                long startBeforeFormat = sCalendar.getTimeInMillis();
+                long endBeforeFormat = eCalendar.getTimeInMillis();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                String formattedDueDate = dateFormat.format(new Date(dateBeforeFormat));
+                String formattedStartDate = dateFormat.format(new Date(startBeforeFormat));
+                String formattedEndDate = dateFormat.format(new Date(endBeforeFormat));
 
                 assessmentTableList = dao.getAllAssessments();
                 if (title.isEmpty() || type.isEmpty()) {
@@ -106,7 +126,8 @@ public class EditAssessmentActivity extends AppCompatActivity {
                     AssessmentDAO dao = db.assessmentDAO();
                     assessment.setTitle(title);
                     assessment.setType(type);
-                    assessment.setDueDate(formattedDueDate);
+                    assessment.setStartDate(formattedStartDate);
+                    assessment.setEndDate(formattedEndDate);
                     int assessmentId = dao.updateAssessment(assessment);
                     Toast.makeText(EditAssessmentActivity.this, "assessment Added Successfully!", Toast.LENGTH_SHORT).show();
 
