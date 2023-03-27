@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Course title -->
+
+    <!-- Course start date -->
+
+    <TextView
+        android:id="@+id/courseStartTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="170dp"
+        android:text="@string/course_start"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.27"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseTitleTextView" />
+
+    <TextView
+        android:id="@+id/instPhoneTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="150dp"
+        android:text="@string/inst_phone"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.314"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instEmailTextView" />
+
+    <TextView
+        android:id="@+id/instNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="150dp"
+        android:text="@string/inst_name"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.314"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseEndTextView" />
+
+    <TextView
+        android:id="@+id/instEmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="150dp"
+        android:text="@string/inst_email"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.317"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instNameTextView" />
+
+    <TextView
+        android:id="@+id/courseTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="160dp"
+        android:text="@string/course_title"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.265"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/courseStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="131dp"
+        android:text="@string/course_status"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.327"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instPhoneTextView" />
+
+    <!-- Instructor email -->
+
+    <TextView
+        android:id="@+id/courseEndTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="170dp"
+        android:text="@string/end_date"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.289"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseStartTextView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/assessmentsView"
+        android:layout_width="195dp"
+        android:layout_height="250dp"
+        android:layout_marginEnd="116dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/recycler_view"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notesView"
+        android:layout_width="195dp"
+        android:layout_height="246dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/recycler_view"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/EditCourseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_menu_info_details"
+        app:backgroundTint="#FFC107"
+        app:layout_constraintBottom_toTopOf="@+id/DeleteCourseButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/assessmentsView" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/AddAssessmentButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="49dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        app:backgroundTint="#4CAF50"
+        app:layout_constraintBottom_toTopOf="@+id/EditCourseButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/assessmentsView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/DeleteCourseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:rotation="45"
+        app:backgroundTint="#C30000"
+        app:layout_constraintBottom_toTopOf="@+id/addNoteButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/assessmentsView"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/notesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Course Notes"
+        app:layout_constraintBottom_toTopOf="@+id/notesView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.943" />
+
+    <TextView
+        android:id="@+id/assessTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="172dp"
+        android:layout_marginBottom="5dp"
+        android:text="Assessments"
+        app:layout_constraintBottom_toTopOf="@+id/assessmentsView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addNoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/assessmentsView"
+        app:srcCompat="@android:drawable/stat_notify_chat" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

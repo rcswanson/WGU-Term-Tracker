@@ -3,8 +3,6 @@ package UI.Assessments;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,18 +17,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import Adapters.AssessmentAdapter;
 import Database.AppDatabase;
 import Database.AssessmentDAO;
 import Database.CourseDAO;
-import Database.TermDAO;
 import Entities.AssessmentTable;
-import Entities.CourseTable;
-import UI.Terms.TermDetailActivity;
-import Utilities.NotificationController;
-import Utilities.NotificationReceiver;
 
 public class AssessmentDetailActivity extends AppCompatActivity {
 
@@ -47,41 +39,6 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_detail);
 
-        // INITIALIZES START AND END DATES FOR NOTIFICATIONS
-
-        due = assessment.getDueDate();
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        Date notifyDue = null;
-        try {
-            notifyDue = format.parse(due);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-
-        // CREATES NOTIFICATION CHANNEL
-        NotificationController.createNotificationChannel(this);
-
-        // SCHEDULE START DATE NOTIFICATION
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(notifyDue);
-        startCalendar.set(Calendar.HOUR_OF_DAY, 12); // Set the notification time to 9AM
-        startCalendar.set(Calendar.MINUTE, 23);
-        startCalendar.set(Calendar.SECOND, 0);
-
-        long startNotificationTime = startCalendar.getTimeInMillis();
-        long currentTime = System.currentTimeMillis();
-
-        if (startNotificationTime > currentTime) {
-            // The start notification time is in the future
-            Intent startIntent = new Intent(this, NotificationReceiver.class);
-            startIntent.putExtra(NotificationReceiver.NOTIFICATION_TITLE, "Assessment Due Date");
-            startIntent.putExtra(NotificationReceiver.NOTIFICATION_MESSAGE, "Your Assessment Is Due Today.");
-            PendingIntent startPendingIntent = PendingIntent.getBroadcast(this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, startNotificationTime, startPendingIntent);
-        }
-
         assessmentTitleTextView = findViewById(R.id.assessmentTitleTextView);
         assessmentTypeTextView = findViewById(R.id.assessmentTypeTextView);
         dueDateTextView = findViewById(R.id.dueDateTextView);
@@ -89,13 +46,37 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         int courseId = getIntent().getIntExtra("courseId", -1);
         int assessId = getIntent().getIntExtra("assessmentId", -1);
 
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
+        int desiredHour = 8;
+        int desiredMinute = 0;
+
         if (assessId != -1) {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
             AssessmentDAO dao = db.assessmentDAO();
             assessment = dao.getAssessmentById(assessId);
 
             if (assessment != null) {
-                updateUI();
+                // Retrieve the start date of the course
+                Date currentDate = new Date();
+                String dueDateString = assessment.getDueDate();
+                SimpleDateFormat DateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date startDate = null;
+                try {
+                    startDate = DateFormat.parse(dueDateString);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                if (currentDate.equals(startDate)) {
+                    if (currentHour == desiredHour && currentMinute == desiredMinute) {
+                        Intent intent = new Intent("com.example.notification.ACTION_NOTIFICATION");
+                        intent.putExtra("title", "Assessment: " + assessment.getTitle());
+                        intent.putExtra("message", "Your Assessment " + assessment.getTitle() + "is due today!");
+                        sendBroadcast(intent);
+                    }
+                }
             }
         }
 

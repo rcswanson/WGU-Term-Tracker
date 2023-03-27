@@ -149,7 +149,7 @@ public class EditCourseActivity extends AppCompatActivity {
                     Toast.makeText(EditCourseActivity.this, "Course Modified Successfully!", Toast.LENGTH_SHORT).show();
 
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("courseId", (int) courseId);
+                    resultIntent.putExtra("courseId", courseId);
                     setResult(Activity.RESULT_OK, resultIntent);
                     finish();
                 }
